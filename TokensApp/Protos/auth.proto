@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "TokensApp";
+
+package auth;
+
+service Auth {
+  rpc Login (LoginRequest) returns (LoginReply);
+  rpc GetRefreshToken (GetTokenRequest) returns (GetTokenReply);
+  rpc GetAccessToken (GetTokenRequest) returns (GetTokenReply);
+}
+
+message LoginRequest {
+  string Login_or_email = 1;
+  string password = 2;
+}
+
+message LoginReply {
+  string access_token = 1;
+  string refresh_token = 2;
+  string message = 3;
+}
+
+message GetTokenRequest {
+  string refresh_token = 1;
+}
+
+message GetTokenReply {
+  string token = 1;
+  string message = 2;
+}

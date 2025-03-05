@@ -1,0 +1,48 @@
+networks:
+   sandbox-network:
+    driver: bridge
+
+services:
+  proxy:
+    image: ${DOCKER_REGISTRY-}proxy
+    container_name: proxy-cont
+    build:
+      context: .
+      dockerfile: Proxy/Dockerfile
+    networks:
+     - sandbox-network  
+    depends_on:
+     - usersapp
+
+  usersapp:
+    image: ${DOCKER_REGISTRY-}usersapp
+    container_name: usersapp-cont
+    build:
+      context: .
+      dockerfile: UsersApp/Dockerfile
+    networks:
+     - sandbox-network
+    depends_on:
+     - usersdb
+
+  usersdb:
+   image: postgres:latest
+   container_name: usersapp-db
+   environment:
+    - POSTGRES_DB=usersdb
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=password
+   ports:
+    - 5432:5432
+   networks:
+    - sandbox-network
+
+  tokensapp:
+    image: ${DOCKER_REGISTRY-}tokensapp
+    container_name: tokensapp-cont
+    build:
+      context: .
+      dockerfile: TokensApp/Dockerfile
+    networks:
+     - sandbox-network
+
